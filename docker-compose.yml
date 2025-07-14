@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "80:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: 10.0.1.204:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - /home/ubuntu/web-db:/var/www/html
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-northeast-2
+        awslogs-group: gaguyo_logs_tf
+        awslogs-stream: ${HOSTNAME}
