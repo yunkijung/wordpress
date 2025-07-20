@@ -1,9 +1,10 @@
 version: '3.3'
+
 services:
   wordpress:
     image: wordpress:latest
     ports:
-      - "80:80"
+      - "8080:80"
     restart: always
     environment:
       WORDPRESS_DB_HOST: 10.0.1.204:3306
@@ -18,3 +19,18 @@ services:
         awslogs-region: ap-northeast-2
         awslogs-group: gaguyo_logs_tf
         awslogs-stream: ${HOSTNAME}
+
+  modsec:
+    image: owasp/modsecurity:nginx
+    container_name: modsec
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/templates/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
+      - ./nginx/modsecurity.conf:/etc/nginx/modsecurity.d/modsecurity.conf
+      - ./nginx/crs:/etc/nginx/modsecurity.d/owasp-crs
+    environment:
+      - MODSECURITY_RULES_FILE=/etc/nginx/modsecurity.d/modsecurity.conf
+    depends_on:
+      - wordpress
+
