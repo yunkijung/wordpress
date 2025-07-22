@@ -13,6 +13,7 @@ services:
       WORDPRESS_DB_NAME: wordpress
     volumes:
       - /home/ubuntu/web-db:/var/www/html
+      - ./wordpress-logs:/var/log/apache2
     logging:
       driver: awslogs
       options:
@@ -29,6 +30,7 @@ services:
       - ./nginx/templates/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
       - ./nginx/modsecurity.conf:/etc/nginx/modsecurity.d/modsecurity.conf
       - ./nginx/crs:/etc/nginx/modsecurity.d/owasp-crs
+      - ./modsec-logs:/var/log/modsec
     environment:
       - MODSECURITY_RULES_FILE=/etc/nginx/modsecurity.d/modsecurity.conf
     depends_on:
